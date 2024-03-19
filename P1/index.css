@@ -13,7 +13,10 @@ h1 {
 p {
     color: #000000;
 }
-
+.columnas {
+    display: flex;
+    justify-content: center;
+}
 /* Columnas */
 .columna {
     display: inline-block;
