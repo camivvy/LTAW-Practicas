@@ -3,7 +3,7 @@ const fs = require('fs');
 
 
 // Definir el puerto a utilizar
-const PUERTO = 9099
+const PUERTO = 9090
 const pag_principal = 'index.html';
 const pag_error = 'pag_error.html';
 const pagina_error = fs.readFileSync(pag_error);
