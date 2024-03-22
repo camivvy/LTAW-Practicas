@@ -17,7 +17,7 @@ p {
     display: flex;
     justify-content: center;
 }
-/* Columnas */
+
 .columna {
     display: inline-block;
     width: 25%;
@@ -29,7 +29,7 @@ p {
     text-align: center;
 }
 
-/* Colores Columna */
+
 #c1 {
     background-color: #E9B44C;
 }
@@ -42,14 +42,13 @@ p {
     background-color: #9B2915;
 }
 
-/* Imágenes */
+
 img {
     display: block;
     margin: auto;
     border-radius: 5px;
 }
 
-/* Botones */
 button {
     background-color: #4CAF50;
     color: white;
@@ -57,15 +56,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-/* Enlaces */
-a {
-    text-decoration: none;
-    color: inherit;
-}
 
-a:hover {
-    text-decoration: underline;
-}
+

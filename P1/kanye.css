@@ -6,14 +6,14 @@ body {
 }
 
 .container {
-    text-align: center; /* Centrar contenido */
-    margin-top: 50px; /* Espacio superior para evitar que la tabla esté demasiado cerca de la parte superior */
+    text-align: center;
+    margin-top: 50px;
 }
 
 table {
-    width: 80%; /* Ancho de la tabla */
-    margin: 0 auto; /* Centrar la tabla horizontalmente */
-    border-collapse: collapse; /* Colapsar bordes de la tabla */
+    width: 80%; 
+    margin: 0 auto; 
+    border-collapse: collapse; 
 }
 
 th, td {
@@ -23,5 +23,5 @@ th, td {
 }
 
 th {
-    background-color: #F5DD90; /* Color de fondo de las celdas del encabezado */
+    background-color: #F5DD90; 
 }

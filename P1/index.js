@@ -10,12 +10,12 @@ const pag_motley = 'motley.html';
 const pag_thesmiths = 'thesmiths.html';
 const pag_error = 'pag_error.html';
 const pagina_error = fs.readFileSync(pag_error);
-console.log(PUERTO);
+//console.log(PUERTO);
 
 const server = http.createServer((req, res) => {
     // Construir el objeto URL con la URL de la solicitud
     let url = new URL(req.url, 'http://' + req.headers['host']);
-    console.log(url.pathname)
+    // console.log(url.pathname)
 
     if (url.pathname == '/') {
         file = pag_principal;
@@ -33,7 +33,7 @@ const server = http.createServer((req, res) => {
 
         // Obtener la extensión del archivo
         const recurso = url.pathname.split('.').pop();
-        console.log('recurso -> '+ recurso);
+        console.log('recurso solicitado -> '+ recurso);
 
 
         switch (recurso) {
@@ -52,7 +52,7 @@ const server = http.createServer((req, res) => {
             default:
                 contentType = 'text/html';
         }
-        console.log('contenttype -> ' + contentType);
+        // console.log('contenttype -> ' + contentType);
 
 
         if (error) {
@@ -62,7 +62,7 @@ const server = http.createServer((req, res) => {
             res.end();
             return;
         } else {
-            console.log('TODO BIEN');
+             console.log('envio correcto');
             // Si el archivo se lee correctamente, envíalo al cliente
             res.writeHead(200, { 'Content-Type': contentType });
             res.write(page);
