@@ -5,6 +5,9 @@ const fs = require('fs');
 // Definir el puerto a utilizar
 const PUERTO = 9090
 const pag_principal = 'index.html';
+const pag_kanye = 'kanye.html';
+const pag_motley = 'motley.html';
+const pag_thesmiths = 'thesmiths.html';
 const pag_error = 'pag_error.html';
 const pagina_error = fs.readFileSync(pag_error);
 console.log(PUERTO);
@@ -16,7 +19,13 @@ const server = http.createServer((req, res) => {
 
     if (url.pathname == '/') {
         file = pag_principal;
-    } else {
+    } else if (url.pathname == '/kanye.html'){
+        file = pag_kanye;
+    }else if (url.pathname == '/motley.html'){
+        file = pag_motley;
+    }else if (url.pathname == '/thesmiths.html'){
+        file = pag_thesmiths;
+    }else {
         file = url.pathname.split('/').pop();
     }
 
