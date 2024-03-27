@@ -1,0 +1,17 @@
+[
+    {
+        "nombre" : "The College Dropout",
+        "descripcion" : "Album de Kanye West",
+        "stock" : 4
+    },
+    {
+        "nombre" : "Dr. Feelgood",
+        "descripcion" : "Album de Motley Crue",
+        "stock" : 2
+    },
+    {
+        "nombre" : "Louder than bombs",
+        "descripcion" : "Album de The smiths",
+        "stock" : 3
+    }
+]
