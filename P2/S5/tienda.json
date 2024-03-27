@@ -1,17 +1,45 @@
-[
-    {
-        "nombre" : "The College Dropout",
-        "descripcion" : "Album de Kanye West",
-        "stock" : 4
-    },
-    {
-        "nombre" : "Dr. Feelgood",
-        "descripcion" : "Album de Motley Crue",
-        "stock" : 2
-    },
-    {
-        "nombre" : "Louder than bombs",
-        "descripcion" : "Album de The smiths",
-        "stock" : 3
-    }
-]
+{
+    "productos": 
+    [
+        {
+            "nombre" : "The College Dropout",
+            "descripcion" : "Album de Kanye West",
+            "stock" : 4,
+            "precio" : 39.99
+        },
+        {
+            "nombre" : "Dr. Feelgood",
+            "descripcion" : "Album de Motley Crue",
+            "stock" : 2,
+            "precio" : 49.99
+        },
+        {
+            "nombre" : "Louder than bombs",
+            "descripcion" : "Album de The smiths",
+            "stock" : 3,
+            "precio" : 29.99
+        }
+    ],
+    "usuarios" :
+    [
+        {
+            "user" : "root",
+            "password" : "0000",
+            "email" : "yosoyroot@gmail.com"
+
+        },
+        {
+            "user" : "cami",
+            "password" : "1234",
+            "email" : "camila@gmail.com"
+        }
+    ],
+    "pedido" : 
+    [
+        {
+            "producto" : "The College Dropout",
+            "unidades" : 1
+        }
+    ]
+
+}
