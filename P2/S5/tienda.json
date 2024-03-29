@@ -37,6 +37,9 @@
     "pedido" : 
     [
         {
+            "nombre" : "root"
+        },
+        {
             "producto" : "The College Dropout",
             "unidades" : 1
         }
