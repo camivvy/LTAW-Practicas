@@ -17,6 +17,17 @@ const server = http.createServer((req, res) => {
     let url = new URL(req.url, 'http://' + req.headers['host']);
     // console.log(url.pathname)
 
+
+    //cosas nuevas P2
+    const cookies = req.headers.cookie;
+    if(cookies){    
+        console.log("Cookie: " + cookies );
+    }else{
+        console.log("No hay cookies en esta peticion");
+        }
+
+
+
     if (url.pathname == '/') {
         file = pag_principal;
     } else if (url.pathname == '/kanye.html'){
