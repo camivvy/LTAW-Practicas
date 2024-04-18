@@ -19,14 +19,17 @@ const server = http.createServer((req, res) => {
 
 
     //cosas nuevas P2
-    const cookies = req.headers.cookie;
-    if(cookies){    
-        console.log("Cookie: " + cookies );
+    //las cookies
+    const cookie = req.headers.cookie;
+    if(cookie){    
+        console.log("Cookie: " + cookie );
     }else{
         console.log("No hay cookies en esta peticion");
         }
 
-
+    //-- Cargar pagina web del formulario
+    const FORMULARIO = fs.readFileSync('iniciosesion.html','utf-8');
+   
 
     if (url.pathname == '/') {
         file = pag_principal;
@@ -36,10 +39,49 @@ const server = http.createServer((req, res) => {
         file = pag_motley;
     }else if (url.pathname == '/thesmiths.html'){
         file = pag_thesmiths;
+    }else if (url.pathname == '/procesar'){
+        procesamiento();
     }else {
         file = url.pathname.split('/').pop();
     }
+    function procesamiento(){
+        let registrado = false;
+        username = url.searchParams.get("username");
+        password = url.searchParams.get("password");
+        usuariosregistrados = fs.readFileSync("tienda.json");
+        var jsonregistrados = JSON.parse(usuariosregistrados);
+        for (var a=0; a< jsonregistrados["usuarios"].length; a++){
+            let posicion = jsonregistrados["usuarios"][a];
+            if (username == posicion["username"] && password == posicion["password"]){
+                registrado = true;
+                console.log("llega aki")
+                // res.setHeader('Set-Cookie', "user = " + username);
+            }
+            if (registrado) {
+                console.log("entra dentro de registrado")
+                
+                fs.readFile("index.html", function (error, page){
+                    if (error) throw error;
+                    var pagprincipal = page.toString();
+                    pagprincipal = pagprincipal.replace("<h2> Usuario : Sesion no iniciada</h2>", "<h2> Usuario Registrado: " + username  + "</h2>");
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    res.write(pagprincipal);
+                    res.end();
+                    file = pagprincipal;
+                });
+                
+            } else {
+                fs.readFile("usuarionoregistrado.html", function (error, page){
+                    if (error) throw error;
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    res.write(page);
+                    res.end();
+                });
 
+            }
+        }
+    }
+    
     fs.readFile(file, (error, page) => {
 
         // Obtener la extensión del archivo

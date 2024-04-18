@@ -1,0 +1,16 @@
+{
+    "usuarios":
+    [{
+        "username" : "cami",
+        "nombre_real" : "Camila",
+        "password": "cami123",
+        "correo": "camila@gmail.com"
+
+    },
+    {   "username" : "root",
+        "nombre_real": "Root",
+        "password": "iamroot",
+        "correo": "root@gmail.com"
+
+    }]
+}

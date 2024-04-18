@@ -8,7 +8,15 @@
 <body>
     <div class="container">
     <h1 ALIGN="center">  Introduce tus datos </h1>
-   <p> Hola </p>
+    <form action="/procesar" method="get" accept-charset=utf-8>
+        Usuario:
+        <input type="text" name="username"/>
+        <p></p>
+        Contrasena:
+        <input type="text" name="password"/>
+        <p></p>
+        <input type="submit" value="Entrar"/>
+    </form>
     <br>
     <a href="http://localhost:9090/"> Volver a la tienda de vinilos </a>
 </div>
