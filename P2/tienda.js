@@ -10,6 +10,7 @@ const pag_motley = 'motley.html';
 const pag_thesmiths = 'thesmiths.html';
 const pag_error = 'pag_error.html';
 const pagina_error = fs.readFileSync(pag_error);
+const pagina_no_reg = fs.readFileSync('usuarionoregistrado.html')
 //console.log(PUERTO);
 
 const server = http.createServer((req, res) => {
@@ -54,8 +55,8 @@ const server = http.createServer((req, res) => {
             let posicion = jsonregistrados["usuarios"][a];
             if (username == posicion["username"] && password == posicion["password"]){
                 registrado = true;
-                console.log("llega aki")
-                // res.setHeader('Set-Cookie', "user = " + username);
+                console.log("llega aki en root")
+                //res.setHeader('Set-Cookie', "user = " + username);
             }
             if (registrado) {
                 console.log("entra dentro de registrado")
@@ -70,14 +71,15 @@ const server = http.createServer((req, res) => {
                     file = pagprincipal;
                 });
                 
-            } else {
+            } else if (registrado == false) {
                 fs.readFile("usuarionoregistrado.html", function (error, page){
                     if (error) throw error;
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write(page);
                     res.end();
+                    file = pagina_no_reg;
+                    console.log("no te has registrado")
                 });
-
             }
         }
     }
