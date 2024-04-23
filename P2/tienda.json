@@ -1,5 +1,26 @@
 {
-    "usuarios":
+    "productos": 
+    [
+        {
+            "nombre" : "The College Dropout",
+            "descripcion" : "Album de Kanye West",
+            "stock" : 4,
+            "precio" : 39.99
+        },
+        {
+            "nombre" : "Dr. Feelgood",
+            "descripcion" : "Album de Motley Crue",
+            "stock" : 2,
+            "precio" : 49.99
+        },
+        {
+            "nombre" : "Louder than bombs",
+            "descripcion" : "Album de The smiths",
+            "stock" : 3,
+            "precio" : 29.99
+        }
+    ],
+    "usuarios" :
     [{
         "username" : "cami",
         "nombre_real" : "Camila",
@@ -9,8 +30,21 @@
     },
     {   "username" : "root",
         "nombre_real": "Root",
-        "password": "iamroot",
+        "password": "1234",
         "correo": "root@gmail.com"
 
-    }]
+    }
+        
+    ],
+    "pedido" : 
+    [
+        {
+            "nombre" : "root"
+        },
+        {
+            "producto" : "The College Dropout",
+            "unidades" : 1
+        }
+    ]
+
 }

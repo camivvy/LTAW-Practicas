@@ -10,8 +10,7 @@ const pag_motley = 'motley.html';
 const pag_thesmiths = 'thesmiths.html';
 const pag_error = 'pag_error.html';
 const pagina_error = fs.readFileSync(pag_error);
-const pagina_no_reg = fs.readFileSync('usuarionoregistrado.html')
-//console.log(PUERTO);
+const pagina_no_reg = fs.readFileSync('usuarionoregistrado.html') //console.log(PUERTO);
 
 const server = http.createServer((req, res) => {
     // Construir el objeto URL con la URL de la solicitud
@@ -24,6 +23,7 @@ const server = http.createServer((req, res) => {
     const cookie = req.headers.cookie;
     if(cookie){    
         console.log("Cookie: " + cookie );
+        //res.setHeader('Set-Cookie', "user = " + username);
     }else{
         console.log("No hay cookies en esta peticion");
         }
@@ -125,7 +125,10 @@ const server = http.createServer((req, res) => {
         }
         
     });
+    
+    
 });
+
 
 server.listen(PUERTO, () => {
     console.log("Escuchando en puerto: " + PUERTO);
