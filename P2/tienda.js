@@ -20,24 +20,63 @@ const server = http.createServer((req, res) => {
     let url = new URL(req.url, 'http://' + req.headers['host']);
     // console.log(url.pathname)
 
+    //-- Variable para guardar el usuario
+    let user;
 
-    //cosas nuevas P2
-    //las cookies
+    // Obtiende las cookies
     const cookie = req.headers.cookie;
-    if(cookie){    
-        console.log("Cookie: " + cookie );
-        //res.setHeader('Set-Cookie', "user = " + username);
-    }else{
-        console.log("No hay cookies en esta peticion");
+    if (cookie) {
+    
+        //-- Obtener un array con todos los pares nombre-valor
+        let pares = cookie.split(";");
+    
+        //-- Recorrer todos los pares nombre-valor
+        pares.forEach((element, index) => {
+    
+          //-- Obtener los nombres y valores por separado
+          let [nombre, valor] = element.split('=');
+    
+          //-- Leer el usuario
+          //-- Solo si el nombre es 'user'
+          if (nombre.trim() === 'user') {
+            user = valor;
+          }
+        });
     }
 
     //-- Cargar pagina web del formulario
     const FORMULARIO = fs.readFileSync('iniciosesion.html','utf-8');
    
 
-    if (url.pathname == '/') {
+    if (url.pathname == '/' || url.pathname.endsWith('/index.html') ) { // PÁGINA PRINCIPAL
         file = pag_principal;
-        mandarPagina(file);
+
+        if (user) {
+            fs.readFile(file, function (error, page){
+
+                if (error) {
+                    throw error
+                } else {
+                    var pagprincipal = page.toString();
+                    pagprincipal = pagprincipal.replace("<h2> Usuario : Sesion no iniciada</h2>", "<h2> Usuario Registrado: " + user  + "</h2>");
+                   
+                    // Cuando el user está definido es porque hay cookie de usuario, ya no se puede inciar sesión
+                    pagprincipal = pagprincipal.replace("<button ALIGN=\"center\" id=\"iniciosesion\" onclick=\"location.href='iniciosesion.html';\">Iniciar Sesion</button>", "")
+
+                    res.setHeader('Set-Cookie', "user=" + user);
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    res.write(pagprincipal);
+                    res.end();
+    
+                }
+            });
+        } else {
+            mandarPagina(file);
+        }
+
+        
+        
+        
     } else if (url.pathname == '/kanye.html'){
         file = pag_kanye;
         mandarPagina(file);
@@ -82,7 +121,10 @@ const server = http.createServer((req, res) => {
                 } else {
                     var pagprincipal = page.toString();
                     pagprincipal = pagprincipal.replace("<h2> Usuario : Sesion no iniciada</h2>", "<h2> Usuario Registrado: " + username  + "</h2>");
-                   
+                    
+                    // Cuando el user está definido es porque hay cookie de usuario, ya no se puede inciar sesión
+                    pagprincipal = pagprincipal.replace("<button ALIGN=\"center\" id=\"iniciosesion\" onclick=\"location.href='iniciosesion.html';\">Iniciar Sesion</button>", "")
+
                     res.setHeader('Set-Cookie', "user=" + username);
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write(pagprincipal);
