@@ -12,6 +12,9 @@ const pag_error = 'pag_error.html';
 const pagina_error = fs.readFileSync(pag_error);
 const pagina_no_reg = fs.readFileSync('usuarionoregistrado.html') //console.log(PUERTO);
 
+// Crear tienda a partir del json
+const tiendaenjson = fs.readFileSync("tienda.json");
+
 const server = http.createServer((req, res) => {
     // Construir el objeto URL con la URL de la solicitud
     let url = new URL(req.url, 'http://' + req.headers['host']);
@@ -26,7 +29,7 @@ const server = http.createServer((req, res) => {
         //res.setHeader('Set-Cookie', "user = " + username);
     }else{
         console.log("No hay cookies en esta peticion");
-        }
+    }
 
     //-- Cargar pagina web del formulario
     const FORMULARIO = fs.readFileSync('iniciosesion.html','utf-8');
@@ -34,99 +37,119 @@ const server = http.createServer((req, res) => {
 
     if (url.pathname == '/') {
         file = pag_principal;
+        mandarPagina(file);
     } else if (url.pathname == '/kanye.html'){
         file = pag_kanye;
+        mandarPagina(file);
     }else if (url.pathname == '/motley.html'){
         file = pag_motley;
+        mandarPagina(file);
     }else if (url.pathname == '/thesmiths.html'){
         file = pag_thesmiths;
+        mandarPagina(file);
     }else if (url.pathname == '/procesar'){
         procesamiento();
     }else {
         file = url.pathname.split('/').pop();
+        mandarPagina(file);
     }
+
     function procesamiento(){
         let registrado = false;
+
+        // Coge parámetros de la url
         username = url.searchParams.get("username");
         password = url.searchParams.get("password");
-        usuariosregistrados = fs.readFileSync("tienda.json");
-        var jsonregistrados = JSON.parse(usuariosregistrados);
-        for (var a=0; a< jsonregistrados["usuarios"].length; a++){
+        
+        const jsonregistrados = JSON.parse(tiendaenjson);
+
+        for (var a=0; a < jsonregistrados["usuarios"].length; a++){
             let posicion = jsonregistrados["usuarios"][a];
+
             if (username == posicion["username"] && password == posicion["password"]){
                 registrado = true;
-                console.log("llega aki en root")
-                //res.setHeader('Set-Cookie', "user = " + username);
+                console.log(username)
             }
-            if (registrado) {
-                console.log("entra dentro de registrado")
-                
-                fs.readFile("index.html", function (error, page){
-                    if (error) throw error;
+        }
+
+        if (registrado == true) {
+            console.log("entra dentro de registrado")
+            
+            fs.readFile("index.html", function (error, page){
+                console.log("entra al readfle")
+                if (error) {
+                    throw error
+                } else {
                     var pagprincipal = page.toString();
                     pagprincipal = pagprincipal.replace("<h2> Usuario : Sesion no iniciada</h2>", "<h2> Usuario Registrado: " + username  + "</h2>");
+                   
+                    res.setHeader('Set-Cookie', "user=" + username);
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write(pagprincipal);
                     res.end();
-                    file = pagprincipal;
-                });
-                
-            } else if (registrado == false) {
-                fs.readFile("usuarionoregistrado.html", function (error, page){
-                    if (error) throw error;
+
+                }
+            });
+            
+        } else if (registrado == false) {
+            fs.readFile("usuarionoregistrado.html", function (error, page){
+                if (error) {
+                    throw error
+                }else{
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write(page);
                     res.end();
-                    file = pagina_no_reg;
-                    console.log("no te has registrado")
-                });
-            }
-        }
-    }
-    
-    fs.readFile(file, (error, page) => {
-
-        // Obtener la extensión del archivo
-        const recurso = url.pathname.split('.').pop();
-        console.log('recurso solicitado -> '+ recurso);
-
-
-        switch (recurso) {
-            case 'css':
-                contentType = 'text/css';
-                break;
-            case 'js':
-                contentType = 'text/javascript';
-                break;
-            case 'png':
-                contentType = 'image/png';
-                break;
-            case 'jpg':
-                contentType = 'image/jpg';
-                break;
-            default:
-                contentType = 'text/html';
-        }
-        // console.log('contenttype -> ' + contentType);
-
-
-        if (error) {
-            // Si hay un error al leer el archivo, muestra un error 404
-            res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.write(pagina_error);
-            res.end();
-            return;
-        } else {
-             console.log('envio correcto');
-            // Si el archivo se lee correctamente, envíalo al cliente
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.write(page);
-            res.end();
+                    console.log("no te has registrado")  
+                }
+                
+            });
         }
         
-    });
+    }
+    
+    function mandarPagina(file) {
+        fs.readFile(file, (error, page) => {
+
+            // Obtener la extensión del archivo
+            const recurso = url.pathname.split('.').pop();
+            console.log('recurso solicitado -> '+ recurso);
     
     
+            switch (recurso) {
+                case 'css':
+                    contentType = 'text/css';
+                    break;
+                case 'js':
+                    contentType = 'text/javascript';
+                    break;
+                case 'png':
+                    contentType = 'image/png';
+                    break;
+                case 'jpg':
+                    contentType = 'image/jpg';
+                    break;
+                default:
+                    contentType = 'text/html';
+            }
+            // console.log('contenttype -> ' + contentType);
+    
+    
+            if (error) {
+                // Si hay un error al leer el archivo, muestra un error 404
+                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.write(pagina_error);
+                res.end();
+                return;
+            } else {
+                 console.log('envio correcto');
+                // Si el archivo se lee correctamente, envíalo al cliente
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.write(page);
+                res.end();
+            }
+            
+        });
+    } 
 });
 
 
