@@ -12,6 +12,12 @@ app.get('/', function (req, res) {
   res.send('Bienvenido a mi aplicación Web!!!');
 })
  
+//-- Otra vista
+app.get('/woala', (req, res) => {
+    res.send('WOALA! Chuck Norris approved!! :-)');
+    console.log("Acceso a /woala");
+});
+
 //-- Lanzar el servidor
 app.listen(PORT);
 console.log("Servidor Express corriendo en puerto " + PORT);
