@@ -47,11 +47,9 @@ io.on('connect', (socket) => {
     if (data.endsWith("/")){
         socket.send("Esperando a recibir comando, si quiere consultar los comandos disponibles utilice: /help")
     }else if (data.split("/")[1] == 'help') {
-        socket.send("Comandos Disponibles: /list, /hour, /hello, /date");
+        socket.send("Comandos Disponibles: /list, /hello, /date");
     } else if(data.split("/")[1] == 'list') {
         socket.send("Hay " + io.engine.clientsCount + " clientes conectados");
-    } else if(data.split("/")[1] == 'hour') {
-        socket.send("Hora: " + Fecha.toLocaleTimeString());
     }else if(data.split("/")[1] == 'hello'){
         socket.send('Hola! Bienvenido al chat!!')
     }else if (data.split("/")[1] == 'date'){
