@@ -3,8 +3,8 @@ const socketServer = require('socket.io').Server;
 const http = require('http');
 const express = require('express');
 const colors = require('colors');
-
-const PUERTO = 8087;
+const PUERTO = 9090;
+const Fecha = new Date();
 
 //-- Crear una nueva aplciacion web
 const app = express();
@@ -18,7 +18,7 @@ const io = new socketServer(server);
 //-------- PUNTOS DE ENTRADA DE LA APLICACION WEB
 //-- Definir el punto de entrada principal de mi aplicación web
 app.get('/', (req, res) => {
-  res.send('Bienvenido al chat' + '<p><a href="/chat.html"> Comienza a chatear! </a></p>');
+    res.redirect("/chat.html");
 });
 
 //-- Esto es necesario para que el servidor le envíe al cliente la
@@ -29,27 +29,39 @@ app.use('/', express.static(__dirname +'/'));
 app.use(express.static('public'));
 
 //------------------- GESTION SOCKETS IO
-//-- Evento: Nueva conexion recibida
+//-- Evento: Nueva conexión recibida
 io.on('connect', (socket) => {
+    console.log('** NUEVA CONEXIÓN **'.yellow);
+    
+    //manda mensaje de bienvenida unicamente al usuario que se ha conectado
+    socket.emit("message", "¡Bienvenido al chat!¡Escribe para comenzar!");
+    
+    //-- Evento de desconexión
+    socket.on('disconnect', function(){
+      console.log('** CONEXIÓN TERMINADA **'.yellow);
+    });  
   
-  console.log('** NUEVA CONEXIÓN **'.yellow);
-
-  //-- Evento de desconexión
-  socket.on('disconnect', function(){
-    console.log('** CONEXIÓN TERMINADA **'.yellow);
-  });  
-
-  //-- Mensaje recibido: Reenviarlo a todos los clientes conectados
-  socket.on("message", (msg)=> {
-    console.log("Mensaje Recibido!: " + msg.blue);
-
-    //-- Reenviarlo a todos los clientes conectados
-    io.send(msg);
+    //-- Mensaje recibido: Reenviarlo a todos los clientes conectados
+    socket.on("message", (data)=> {
+      console.log("Mensaje Recibido!: " + data);
+      if (data.split("/")[1] == 'help') {
+        socket.send("Comandos Disponibles: /list, /hour, /hello, /date");
+    } else if(data.split("/")[1] == 'list') {
+        socket.send("hay " + io.engine.clientsCount + " clientes conectados");
+    } else if(data.split("/")[1] == 'hour') {
+        socket.send("Hora: " + Fecha.toLocaleTimeString());
+    }else if(data.split("/")[1] == 'hello'){
+        socket.send('Hola! Bienvenido al chat!!')
+    }else if (data.split("/")[1] == 'date'){
+        socket.send("Fecha: " + Fecha.toLocaleDateString());
+    }else{
+        io.send(data);
+    }
+      
+    });
   });
 
-});
 
-//-- Lanzar el servidor HTTP
-//-- ¡Que empiecen los juegos de los WebSockets!
+
 server.listen(PUERTO);
 console.log("Escuchando en puerto: " + PUERTO);
