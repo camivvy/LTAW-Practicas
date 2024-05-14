@@ -2,10 +2,8 @@
 const socketServer = require('socket.io').Server;
 const http = require('http');
 const express = require('express');
-const colors = require('colors');
 const PUERTO = 9090;
 const Fecha = new Date();
-const path = require('path');
 const ip = require("ip");
 
 
@@ -17,8 +15,6 @@ console.log("Arrancando electron...");
 //-- Variable para acceder a la ventana principal
 //-- Se pone aquí para que sea global al módulo principal
 let win = null;
-
-
 
 //-- Crear una nueva aplciacion web
 const app = express();
@@ -50,10 +46,6 @@ io.on('connect', (socket) => {
     socket.emit("message", "¡Bienvenido al chat, escribe para comenzar!");
     connectedUsers[socket.id] = {};
     win.webContents.send("usuarios", Object.keys(connectedUsers).length);
-
-
-    
- 
 
     //-- Mensaje recibido, dependiendo de que se recibe se hace cada cosa
     socket.on("message", (data)=> {
@@ -89,7 +81,7 @@ io.on('connect', (socket) => {
 
 
   //-- Punto de entrada. En cuanto electron está listo,
-//-- ejec;uta esta función
+//-- ejecuta esta función
     electron.app.on('ready', () => {
     console.log("Evento Ready!");
 
@@ -108,8 +100,6 @@ io.on('connect', (socket) => {
 
  //-- Cargar interfaz gráfica en HTML
  win.loadFile("electron.html");
-
-
 
   win.on('ready-to-show',() =>{
     win.webContents.send('ipaddress', ip.address());

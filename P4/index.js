@@ -27,7 +27,6 @@ electron.ipcRenderer.on('ipaddress', (event, message) => {
 
 });
 
-
 // mensaje recibido de main
 electron.ipcRenderer.on("msg_client", (event, message )=> {
   display.innerHTML += message + "</br>"

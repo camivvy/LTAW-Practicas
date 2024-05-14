@@ -8,19 +8,6 @@ body {
     text-align: center;
   }
   
-  .columna_izq {
-    float: left;
-    width: 50%;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.columna_dch {
-    float: left;
-    width: 50%;
-    padding: 20px;
-    box-sizing: border-box;
-}
   #msg_entry {
     width: calc(100% - 20px);
     padding: 10px;
@@ -42,8 +29,4 @@ body {
     padding: 10px;
     border-radius: 5px;
     background-color: #f9f9f9;
-  }
-  
-  #chat_container {
-    display: none;
   }
