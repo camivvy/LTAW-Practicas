@@ -40,7 +40,7 @@ const connectedUsers = {};
 //-- Evento: Nueva conexión recibida
 io.on('connect', (socket) => {
 
-    console.log('** NUEVA CONEXIÓN **'.yellow);
+    console.log('** NUEVA CONEXIÓN **');
     
     //manda mensaje de bienvenida unicamente al usuario que se ha conectado
     socket.emit("message", "¡Bienvenido al chat, escribe para comenzar!");
@@ -74,7 +74,6 @@ io.on('connect', (socket) => {
         console.log('** CONEXIÓN TERMINADA **'.yellow);
         delete connectedUsers[socket.id];
         win.webContents.send("usuarios", Object.keys(connectedUsers).length);
-        users = users - 1;
       });  
 
   });
@@ -104,6 +103,13 @@ io.on('connect', (socket) => {
   win.on('ready-to-show',() =>{
     win.webContents.send('ipaddress', ip.address());
      });
+
+    electron.ipcMain.handle('prueba', async(event, message) => {
+    console.log("Enviando mensaje: " + message);
+    //-- Enviar mensaje de prueba
+    io.send( message);
+    win.webContents.send('print', message);
+      });
 
 });
 server.listen(PUERTO);
