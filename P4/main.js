@@ -18,7 +18,7 @@ console.log("Arrancando electron...");
 //-- Se pone aquí para que sea global al módulo principal
 let win = null;
 
-let users = {};
+
 
 //-- Crear una nueva aplciacion web
 const app = express();
@@ -30,25 +30,15 @@ const server = http.createServer(app);
 const io = new socketServer(server);
 
 // borrado a ver si soluciona el error
-// app.get('/', (req, res) => {
-//     res.redirect("/chat.html");
-// });
-
-// app.use(express.static(path.join(__dirname, 'public')));
-//-- Esto es necesario para que el servidor le envíe al cliente la
-//-- biblioteca socket.io para el cliente
-// app.use('/', express.static(__dirname +'/'));
-
-// // //-- El directorio publico contiene ficheros estáticos
-// app.use(express.static('public'));
-app.get("/", (req, res )=> {
-    const path = __dirname + "/chat.html";
-    res.sendFile(path);
+app.get('/', (req, res) => {
+    res.redirect("/chat.html");
 });
+
 
 app.use('/', express.static(__dirname +'/'));
 app.use(express.static('public'));
 
+const connectedUsers = {};
 
 //------------------- GESTION SOCKETS IO
 //-- Evento: Nueva conexión recibida
@@ -61,13 +51,9 @@ io.on('connect', (socket) => {
     connectedUsers[socket.id] = {};
     win.webContents.send("usuarios", Object.keys(connectedUsers).length);
 
-    users = users + 1;
-    
-  
-    //poner el numero de usuarios
-    const usuarios = document.getElementById("usuarios");
-    usuarios.textContent = users;
 
+    
+ 
 
     //-- Mensaje recibido, dependiendo de que se recibe se hace cada cosa
     socket.on("message", (data)=> {
@@ -86,9 +72,11 @@ io.on('connect', (socket) => {
         io.send(data);
     }
     });
+
     socket.on("message" , (data) =>{
         win.webContents.send("msg_client", data);
     }) ;
+    
     //-- Evento de desconexión
     socket.on('disconnect', function(){
         console.log('** CONEXIÓN TERMINADA **'.yellow);
@@ -102,7 +90,7 @@ io.on('connect', (socket) => {
 
   //-- Punto de entrada. En cuanto electron está listo,
 //-- ejec;uta esta función
-electron.app.on('ready', () => {
+    electron.app.on('ready', () => {
     console.log("Evento Ready!");
 
     //-- Crear la ventana principal de nuestra aplicación
@@ -119,13 +107,12 @@ electron.app.on('ready', () => {
 });
 
  //-- Cargar interfaz gráfica en HTML
- win.loadFile("chat.html");
+ win.loadFile("electron.html");
 
 
 
   win.on('ready-to-show',() =>{
-      // const ipaddress = require('ip').address(); 
-     win.webContents.send('ipaddress', ip.address());
+    win.webContents.send('ipaddress', ip.address());
      });
 
 });

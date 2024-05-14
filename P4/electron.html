@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Permitir sólo scripts y ficheros de la máquina local -->
+    <!-- Con esto se elimina el aviso de seguridad: Insecure Content-Security-Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src data:;" />
+
+    <!-- Hoja de estilo de la interfaz -->
+    <link rel="stylesheet" href="estilo.css">
+
+    <!-- Cargar el proceso asociado a esta página -->
+    <script src="index.js" defer></script>
+    <!-- Cargar la biblioteca Socket.IO. Nos la debe entregar el servidor -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <title>Mi APP </title>
+</head>
+<body>
+    <h3> Informacion </h3>
+        <p> Version de Node : <span id="nodeVersion"></span> </p>
+        <p> Version de Chrome : <span id="chromeVersion"></span> </p>
+        <p> Version de Electron : <span id="electronVersion"></span> </p>
+    <h3> Usuarios Conectados </h3>
+        <p> <span id="usuarios">  </span></p>
+    <h3> Direccion IP </h3>
+    <p><span id="ipaddress"></span></p>
+    <h3>Mensajes recibidos</h3>
+    <p id="display"></p>
+</body>
+
+</html>

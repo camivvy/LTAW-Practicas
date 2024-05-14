@@ -1,6 +1,5 @@
 
 const electron = require('electron');
-const  ip = require("ip");
 const PUERTO = 9090;
 
 
@@ -25,15 +24,9 @@ const ipAddressElement = document.getElementById('ipaddress');
 electron.ipcRenderer.on('ipaddress', (event, message) => {
   const url = `http://${message}:${PUERTO}/chat.html`;
   ipAddressElement.textContent = url;
-  console.log("entras?")
 
 });
 
-// electron.ipcRenderer.on('ip-address', (event, msg) => {
-//   console.log("Recibida Ip: " + msg);
-//   ipAddressElement.innerHTML = msg + '/chat.html';
-//   ipAddressElement.href = msg + '/chat.html';
-// });
 
 // mensaje recibido de main
 electron.ipcRenderer.on("msg_client", (event, message )=> {
@@ -41,6 +34,6 @@ electron.ipcRenderer.on("msg_client", (event, message )=> {
   
 });
 
-//mensaje para enviar a main
+
 
 

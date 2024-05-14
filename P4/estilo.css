@@ -44,3 +44,6 @@ body {
     background-color: #f9f9f9;
   }
   
+  #chat_container {
+    display: none;
+  }
