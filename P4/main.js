@@ -5,6 +5,9 @@ const express = require('express');
 const colors = require('colors');
 const PUERTO = 9090;
 const Fecha = new Date();
+const path = require('path');
+const ip = require("ip");
+
 
 //-- Cargar el módulo de electron
 const electron = require('electron');
@@ -15,49 +18,37 @@ console.log("Arrancando electron...");
 //-- Se pone aquí para que sea global al módulo principal
 let win = null;
 
-//-- Punto de entrada. En cuanto electron está listo,
-//-- ejecuta esta función
-electron.app.on('ready', () => {
-    console.log("Evento Ready!");
-
-    //-- Crear la ventana principal de nuestra aplicación
-    win = new electron.BrowserWindow({
-        width: 600,  //-- Anchura 
-        height: 400,  //-- Altura
-
-        //-- Permitir que la ventana tenga ACCESO AL SISTEMA
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    }
-    
-});
-
- //-- Cargar interfaz gráfica en HTML
- win.loadFile("chat.html");
-
-});
+let users = {};
 
 //-- Crear una nueva aplciacion web
 const app = express();
 
 //-- Crear un servidor, asosiaco a la App de express
-const server = http.Server(app);
+const server = http.createServer(app);
 
 //-- Crear el servidor de websockets, asociado al servidor http
 const io = new socketServer(server);
 
-//-- Definir el punto de entrada principal de mi aplicación web
-app.get('/', (req, res) => {
-    res.redirect("/chat.html");
-});
+// borrado a ver si soluciona el error
+// app.get('/', (req, res) => {
+//     res.redirect("/chat.html");
+// });
 
+// app.use(express.static(path.join(__dirname, 'public')));
 //-- Esto es necesario para que el servidor le envíe al cliente la
 //-- biblioteca socket.io para el cliente
-app.use('/', express.static(__dirname +'/'));
+// app.use('/', express.static(__dirname +'/'));
 
-//-- El directorio publico contiene ficheros estáticos
+// // //-- El directorio publico contiene ficheros estáticos
+// app.use(express.static('public'));
+app.get("/", (req, res )=> {
+    const path = __dirname + "/chat.html";
+    res.sendFile(path);
+});
+
+app.use('/', express.static(__dirname +'/'));
 app.use(express.static('public'));
+
 
 //------------------- GESTION SOCKETS IO
 //-- Evento: Nueva conexión recibida
@@ -67,12 +58,17 @@ io.on('connect', (socket) => {
     
     //manda mensaje de bienvenida unicamente al usuario que se ha conectado
     socket.emit("message", "¡Bienvenido al chat, escribe para comenzar!");
+    connectedUsers[socket.id] = {};
+    win.webContents.send("usuarios", Object.keys(connectedUsers).length);
+
+    users = users + 1;
     
-    //-- Evento de desconexión
-    socket.on('disconnect', function(){
-      console.log('** CONEXIÓN TERMINADA **'.yellow);
-    });  
   
+    //poner el numero de usuarios
+    const usuarios = document.getElementById("usuarios");
+    usuarios.textContent = users;
+
+
     //-- Mensaje recibido, dependiendo de que se recibe se hace cada cosa
     socket.on("message", (data)=> {
       console.log("Mensaje Recibido!: " + data);
@@ -90,7 +86,48 @@ io.on('connect', (socket) => {
         io.send(data);
     }
     });
+    socket.on("message" , (data) =>{
+        win.webContents.send("msg_client", data);
+    }) ;
+    //-- Evento de desconexión
+    socket.on('disconnect', function(){
+        console.log('** CONEXIÓN TERMINADA **'.yellow);
+        delete connectedUsers[socket.id];
+        win.webContents.send("usuarios", Object.keys(connectedUsers).length);
+        users = users - 1;
+      });  
+
   });
 
+
+  //-- Punto de entrada. En cuanto electron está listo,
+//-- ejec;uta esta función
+electron.app.on('ready', () => {
+    console.log("Evento Ready!");
+
+    //-- Crear la ventana principal de nuestra aplicación
+    win = new electron.BrowserWindow({
+        width: 600,  //-- Anchura 
+        height: 600,  //-- Altura
+
+        //-- Permitir que la ventana tenga ACCESO AL SISTEMA
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+    
+});
+
+ //-- Cargar interfaz gráfica en HTML
+ win.loadFile("chat.html");
+
+
+
+  win.on('ready-to-show',() =>{
+      // const ipaddress = require('ip').address(); 
+     win.webContents.send('ipaddress', ip.address());
+     });
+
+});
 server.listen(PUERTO);
 console.log("Escuchando en puerto: " + PUERTO);
